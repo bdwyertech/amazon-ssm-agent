@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  amazon-ssm-agent:
+    # image: golang:1.16-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile_bdwyertech
+    environment:
+      - GO111MODULE=off
+      - CGO_ENABLED=0
+    volumes:
+      - .:/amazon-ssm-agent
+    command: >
+        sh -c '
+        make clean
+        && make build-any-amd64-linux
+        && make build-arm64
+        && tar -zcvf amazon-ssm-agent-linux_amd64.tar.gz -C bin/linux_amd64/ amazon-ssm-agent ssm-agent-worker ssm-document-worker ssm-session-worker ssm-session-logger ssm-cli
+        && tar -zcvf amazon-ssm-agent-linux_arm64.tar.gz -C bin/linux_arm64/ amazon-ssm-agent ssm-agent-worker ssm-document-worker ssm-session-worker ssm-session-logger ssm-cli
+        && sha256sum amazon-ssm-agent-linux_*.tar.gz
+        '

@@ -1,0 +1,24 @@
+FROM golang:1.16-alpine
+
+RUN apk update && apk add bash git build-base
+
+# RUN apt-get update && apt-get install -y build-essential gcc-mingw-w64-x86-64
+
+# WORKDIR /go/src/github.com/aws/amazon-ssm-agent
+WORKDIR /amazon-ssm-agent
+
+# WORKDIR /amazon-ssm-agent
+
+# COPY . .
+
+# RUN export CGO_ENABLED=0 \
+# 	&& export GO111MODULE=off \
+#     && make clean \
+#     && make build-linux \
+#     && make package-binaries-linux-amd64
+
+# put an exit 0 in the Tools/src/checkstyle.sh script
+# docker run --name ssm-agent-donor ssm-agent
+# docker cp ssm-agent-donor:/go/src/github.com/aws/amazon-ssm-agent/bin/ bin
+# docker rm ssm-agent-donor
+# cd bin && tar czvf amazon-ssm-agent.tar.gz --exclude=ssm-cli linux_amd64/*ssm*
