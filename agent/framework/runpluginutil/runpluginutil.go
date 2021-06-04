@@ -78,9 +78,10 @@ var allPlugins = map[string]struct{}{
 
 // allSessionPlugins is the list of all known session plugins.
 var allSessionPlugins = map[string]struct{}{
-	appconfig.PluginNameStandardStream:      {},
-	appconfig.PluginNameInteractiveCommands: {},
-	appconfig.PluginNamePort:                {},
+	appconfig.PluginNameStandardStream:         {},
+	appconfig.PluginNameInteractiveCommands:    {},
+	appconfig.PluginNamePort:                   {},
+	appconfig.PluginNameNonInteractiveCommands: {},
 }
 
 // Assign method to global variables to allow unittest to override
@@ -104,6 +105,13 @@ func RunPlugins(
 	//Contains the logStreamPrefix without the pluginID
 	logStreamPrefix := ioConfig.CloudWatchConfig.LogStreamPrefix
 	log := context.Log()
+
+	defer func() {
+		if r := recover(); r != nil {
+			log.Errorf("Run plugins panic: \n%v", r)
+			log.Errorf("Stacktrace:\n%s", debug.Stack())
+		}
+	}()
 
 	for pluginIndex, pluginState := range plugins {
 		pluginID := pluginState.Id     // the identifier of the plugin

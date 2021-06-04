@@ -171,7 +171,6 @@ func init() {
 
 	EnvProgramFiles = os.Getenv("ProgramFiles")
 	EnvWinDir = os.Getenv("WINDIR")
-	temp := os.Getenv("TEMP")
 
 	DefaultProgramFolder = filepath.Join(EnvProgramFiles, SSMFolder)
 	DefaultPluginPath = filepath.Join(EnvProgramFiles, SSMPluginFolder)
@@ -189,15 +188,13 @@ func init() {
 	LocalCommandRootSubmitted = filepath.Join(LocalCommandRoot, "Submitted")
 	LocalCommandRootCompleted = filepath.Join(LocalCommandRoot, "Completed")
 	LocalCommandRootInvalid = filepath.Join(LocalCommandRoot, "Invalid")
-	DownloadRoot = filepath.Join(temp, SSMFolder, "Download")
-	UpdaterArtifactsRoot = filepath.Join(temp, SSMFolder, "Update")
-	UpdaterPidLockfile = filepath.Join(temp, SSMFolder, "update.lock")
-	EC2UpdateArtifactsRoot = filepath.Join(EnvWinDir, EC2ConfigServiceFolder, "Update")
-	EC2UpdaterDownloadRoot = filepath.Join(temp, EC2ConfigAppDataFolder, "Download")
+	DownloadRoot = filepath.Join(SSMDataPath, "Download")
+	UpdaterArtifactsRoot = filepath.Join(SSMDataPath, "Update")
+	UpdaterPidLockfile = filepath.Join(SSMDataPath, "update.lock")
 
 	DefaultCustomInventoryFolder = filepath.Join(SSMDataPath, "Inventory", "Custom")
-	EC2UpdateArtifactsRoot = filepath.Join(EnvWinDir, EC2ConfigServiceFolder, "Update")
-	EC2UpdaterDownloadRoot = filepath.Join(temp, EC2ConfigAppDataFolder, "Download")
+	EC2UpdateArtifactsRoot = filepath.Join(programData, EC2ConfigAppDataFolder, "Updater")
+	EC2UpdaterDownloadRoot = filepath.Join(programData, EC2ConfigAppDataFolder, "Downloads")
 	EC2ConfigDataStorePath = filepath.Join(programData, EC2ConfigAppDataFolder, "InstanceData")
 	UpdateContextFilePath = filepath.Join(programData, EC2ConfigAppDataFolder, "Update\\UpdateContext.json")
 	EC2ConfigSettingPath = filepath.Join(EnvProgramFiles, EC2ConfigServiceFolder, "Settings")

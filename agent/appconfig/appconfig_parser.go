@@ -23,6 +23,13 @@ import (
 func parser(config *SsmagentConfig) {
 	log.Printf("processing appconfig overrides")
 
+	// Agent creds profile
+	config.Profile.KeyAutoRotateDays = getNumericValue(
+		config.Profile.KeyAutoRotateDays,
+		defaultProfileKeyAutoRotateDaysMin,
+		defaultProfileKeyAutoRotateDaysMax,
+		defaultProfileKeyAutoRotateDays)
+
 	// Agent config
 	config.Agent.Name = getStringValue(config.Agent.Name, DefaultAgentName)
 	config.Agent.OrchestrationRootDir = getStringValue(config.Agent.OrchestrationRootDir, defaultOrchestrationRootDirName)
@@ -82,6 +89,12 @@ func parser(config *SsmagentConfig) {
 		config.Ssm.RunCommandLogsRetentionDurationHours,
 		DefaultStateOrchestrationLogsRetentionDurationHoursMin,
 		DefaultRunCommandLogsRetentionDurationHours)
+	pluginLocalOutputCleanupOptions := []string{PluginLocalOutputCleanupAfterExecution,
+		PluginLocalOutputCleanupAfterUpload,
+		DefaultPluginOutputRetention}
+	config.Ssm.PluginLocalOutputCleanup = getStringEnum(config.Ssm.PluginLocalOutputCleanup,
+		pluginLocalOutputCleanupOptions,
+		DefaultPluginOutputRetention)
 }
 
 // getStringValue returns the default value if config is empty, else the config value
@@ -114,4 +127,21 @@ func getNumeric64Value(configValue int64, minValue int64, maxValue int64, defaul
 		return defaultValue
 	}
 	return configValue
+}
+
+func getStringEnum(configValue string, possibleValues []string, defaultValue string) string {
+	if stringInList(configValue, possibleValues) {
+		return configValue
+	} else {
+		return defaultValue
+	}
+}
+
+func stringInList(targetString string, stringList []string) bool {
+	for _, candidateString := range stringList {
+		if candidateString == targetString {
+			return true
+		}
+	}
+	return false
 }

@@ -68,7 +68,7 @@ cpy-plugins: copy-src pre-build
 quick-integtest: copy-src pre-build pre-release --quick-integtest --quick-integtest-core --quick-integtest-common
 
 .PHONY: quick-test
-quick-test: copy-src pre-build pre-release --quick-test
+quick-test: copy-src pre-build pre-release --quick-test --quick-test-core --quick-test-common
 
 .PHONY: quick-test-core
 quick-test-core: copy-src pre-build pre-release --quick-test-core
@@ -77,7 +77,10 @@ quick-test-core: copy-src pre-build pre-release --quick-test-core
 quick-test-common: copy-src pre-build pre-release --quick-test-common
 
 .PHONY: quick-e2e
-quick-e2e: copy-src pre-build pre-release --quick-e2e --quick-e2e-core
+quick-e2e: copy-src pre-build pre-release --quick-e2e --quick-e2e-core --quick-e2e-common
+
+.PHONY: test-all
+test-all: copy-src pre-build pre-release checkstyle --quick-integtest --quick-integtest-core --quick-integtest-common --quick-test --quick-test-core --quick-test-common --quick-e2e --quick-e2e-core --quick-e2e-common
 
 .PHONY: pre-release
 pre-release:
@@ -418,6 +421,17 @@ build-tests-windows: copy-src copy-tests-src pre-build
 # if you want to restrict to some specific package, sample below
 # go test -v -gcflags "-N -l" -tags=integration github.com/aws/amazon-ssm-agent/agent/fileutil/...
 	go test -gcflags "-N -l" -tags=e2e github.com/aws/amazon-ssm-agent/core/...
+
+--quick-e2e-common:
+# if you want to restrict to some specific package, sample below
+# go test -v -gcflags "-N -l" -tags=integration github.com/aws/amazon-ssm-agent/agent/fileutil/...
+	go test -gcflags "-N -l" -tags=e2e github.com/aws/amazon-ssm-agent/common/...
+
+.PHONY: lint-all
+lint-all: copy-package-dep
+# if you want to configure what linters are run, edit .golangci.yml
+# if you want to restrict to some specific package edit Tools/src/run_golangci-lint.sh
+	$(GO_SPACE)/Tools/src/run_golangci-lint.sh
 
 .PHONY: gen-report
 gen-report:
